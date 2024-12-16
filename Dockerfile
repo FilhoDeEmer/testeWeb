@@ -2,7 +2,7 @@
 FROM node:18
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /testeweb
 
 # Copy the application files into the working directory
 COPY package*.json ./
