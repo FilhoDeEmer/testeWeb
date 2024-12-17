@@ -2,10 +2,12 @@
 FROM node:18
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /
 
 # Copy the application files into the working directory
 COPY package*.json ./
+
+COPY . .
 
 # Install the application dependencies
 RUN npm install
