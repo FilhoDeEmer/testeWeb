@@ -1,0 +1,92 @@
+create TABLE users (
+    id INT AUTO_INCREMEN,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    passwordHash VARCHAR(255) NOT NULL, 
+    role ENUM('cliente', 'adm') DEFAULT 'cliente',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE enderecos (
+    id INT AUTO_INCREMENT,
+    rua VARCHAR(100),
+    bairro VARCHAR(100),
+    cep VARCHAR(100),
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    complemento VARCHAR(100),
+    PRIMARY KEY (id)
+
+)
+
+create TABLE cliente (
+    id INT AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    endereco_id INT,
+    telefone VARCHAR(11),
+    email VARCHAR(100) NOT NULL,
+    CPF VARCHAR(20) NOT NUll,
+    PRIMARY KEY (id),
+    FOREIGN KEY (email) REFERENCES users(email)
+    FOREIGN KEY (endereco_id) REFERENCES enderecos(id)
+)
+
+CREATE TABLE colecoes (
+    id INT AUTO_INCREMEN,
+    nome VARCHAR(100) NOT NULL,
+    img_ugl VARCHAR(100)
+    PRIMARY KEY (id)
+)
+
+CREATE TABLE categorias(
+    id INT AUTO_INCREMEN,
+    nome VARCHAR(100),
+    colecao_id INT,
+    PRIMARY KEY(id),
+    FOREIGN KEY(colecao_id) REFERENCES colecoes(id)
+)
+
+CREATE TABLE produtos(
+    id INT AUTO_INCREMEN,
+    titulo VARCHAR(100) NOT NULl,
+    preco DECIMAL(10,2) NOT NULL,
+    qnt_normal INT NOT NULL,
+    qnt_reverde INT NOT NULL,
+    img_url VARCHAR(255),
+    descricao VARCHAR(255) NOT NULL,
+    descricao_longa VARCHAR(255) NOT NULL,
+    altura DECIMAL(10,2),
+    largura DECIMAL(10,2),
+    peso DECIMAL(10,2),
+    comprimento DECIMAL(10,2),
+    ativo BOOL,
+    modelo VARCHAR(100),
+    categoria_id INT,
+    PRIMARY KEY(id),
+    FOREIGN KEY(categoria_id) REFERENCES categorias(id)
+)
+
+CREATE TABLE pedidos(
+    id INT AUTO_INCREMEN,
+    cliente_id INT NOT NULL,
+    frete DECIMAL(10,2),
+    sub_total DECIMAL(10,2) NOT NULL
+    total DECIMAL(10,2) NOT NULL,
+    status ENUM('pendente', 'finalizado', 'cancelado', 'aguardando pagamento', 'pago', 'enviado') DEFAULT 'pendente',
+    PRIMARY KEY(id),
+    FOREIGN KEY(cliente_id) REFERENCES cliente(id)
+
+)
+
+CREATE TABLE itensPedido(
+    id INT AUTO_INCREMEN,
+    pedido_id INT,
+    produto_id INT,
+    qnt INT NOT NULL,
+    preco DECIMAL(10,2),
+    PRIMARY KEY(id),
+    FOREIGN KEY(pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY(produto_id) REFERENCES produtos(id)
+)
